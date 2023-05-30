@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const Cart = require("../models/cart");
 const CartItem = require("../models/cart-item");
 
 exports.getProducts = (req, res, next) => {
@@ -98,12 +97,12 @@ exports.postCart = (req, res, next) => {
       let newQuantity = 1;
       if (product) {
         const oldQuantity = product.cartItem.quantity;
-        newQuantity = oldQuantity + 1
+        newQuantity = oldQuantity + 1;
         return fetchCart.addProduct(product, {
-          through : {
-            quantity : newQuantity
-          }
-        })
+          through: {
+            quantity: newQuantity,
+          },
+        });
       }
       return Product.findByPk(prodId)
         .then((product) => {
@@ -128,24 +127,44 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  req.user.getCart()
-  .then(cart => {
-    return cart.getProducts()
-  })
-  .then(products => {
-    console.log(products)
-  })
-}
-exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-  });
-};
+  let fetchCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchCart = cart
+      return cart.getProducts();
+    })
+    .then((products) => {
+      req.user
+        .createOrder()
+        .then((order) => {
+          order.addProducts(
+            products.map((product) => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    })
+    .then((result) => {
+      return fetchCart.setProducts(null)
+    })
+    .then(result => {
+      res.redirect("/orders");
 
-exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
+    })
+    .catch(err =>{
+      console.log(err)
+    })
+};
+exports.getOrders = (req, res, next) => {
+  req.user.getOrders({include: ['products']})
+  .then(orders => {
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Your Orders",
+      orders: orders
+    });
+  })
 };

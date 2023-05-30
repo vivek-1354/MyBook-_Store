@@ -32,12 +32,12 @@
                                         <input type="hidden" value="<%= product.id%>" name="productId">
                                         <button class="btn" type="submit">Delete</button>
                                     </form>
-                                    <form action="/create-order" method="POST">
-                                        <button class="btn">Order Now!</button>
-                                    </form>
                                 </div>
                             </article>
                             <% } %>
+                            <form action="/create-order" method="POST">
+                                <button class="btn">Order Now!</button>
+                            </form>
                     </div>
                     <% } else { %>
                         <h1>Your Cart is Empty!</h1>
