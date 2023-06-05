@@ -86,16 +86,14 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   Product.destroy({where :{
-//     id:prodId
-//   }})
-//   .then(ele =>{
-//     console.log("Item deleted...")
-//   })
-//   .catch(err => {
-//     console.log("Item not Found for delete.")
-//   });
-//   res.redirect("/admin/products");
-// };
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.deleteById(prodId)
+  .then(ele =>{
+    console.log("Item deleted...")
+  })
+  .catch(err => {
+    console.log("Item not Found for delete.")
+  });
+  res.redirect("/admin/products");
+};
