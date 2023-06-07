@@ -19,12 +19,15 @@ class User {
     });
 
     let newQuantity = 1;
-    const updatedCartItems = [...this.cart.items]
-    if (cartProductIndex >= 0){
-       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-       updatedCartItems[cartProductIndex].quantity = newQuantity
+    const updatedCartItems = [...this.cart.items];
+    if (cartProductIndex >= 0) {
+      newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+      updatedCartItems[cartProductIndex].quantity = newQuantity;
     } else {
-      updatedCartItems.push({ productId: new mongodb.ObjectId(product._id), quantity: newQuantity })
+      updatedCartItems.push({
+        productId: new mongodb.ObjectId(product._id),
+        quantity: newQuantity,
+      });
     }
 
     const updatedCart = { items: updatedCartItems };
@@ -37,7 +40,26 @@ class User {
       );
   }
 
-
+  getCart() {
+    const db = getDb();
+    const productsIds = this.cart.items.map((i) => {
+      return i.productId;
+    });
+    return db
+      .collection("products")
+      .find({ _id: { $in: productsIds } })
+      .toArray()
+      .then((products) => {
+        return products.map((p) => {
+          return {
+            ...p,
+            quantity: this.cart.items.find((i) => {
+              return i.productId.toString() === p._id.toString();
+            }),
+          };
+        });
+      });
+  }
   static findById(userId) {
     const db = getDb();
     return db

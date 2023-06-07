@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <h2>Quantity: <%= product.cartItem.quantity %></h2>
+                                    <h2>Quantity: <%= product.quantity.quantity %></h2>
                                     <form action="/cart-delete-item" method="POST">
                                         <input type="hidden" value="<%= product._id%>" name="productId">
                                         <button class="btn" type="submit">Delete</button>
