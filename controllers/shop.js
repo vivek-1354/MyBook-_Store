@@ -84,29 +84,8 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  let fetchCart;
   req.user
-    .getCart()
-    .then((cart) => {
-      fetchCart = cart;
-      return cart.getProducts();
-    })
-    .then((products) => {
-      req.user
-        .createOrder()
-        .then((order) => {
-          order.addProducts(
-            products.map((product) => {
-              product.orderItem = { quantity: product.cartItem.quantity };
-              return product;
-            })
-          );
-        })
-        .catch((err) => console.log(err));
-    })
-    .then((result) => {
-      return fetchCart.setProducts(null);
-    })
+    .addOrder()
     .then((result) => {
       res.redirect("/orders");
     })
@@ -114,12 +93,12 @@ exports.postOrder = (req, res, next) => {
       console.log(err);
     });
 };
-exports.getOrders = (req, res, next) => {
-  req.user.getOrders({ include: ["products"] }).then((orders) => {
-    res.render("shop/orders", {
-      path: "/orders",
-      pageTitle: "Your Orders",
-      orders: orders,
-    });
-  });
-};
+// exports.getOrders = (req, res, next) => {
+//   req.user.getOrders({ include: ["products"] }).then((orders) => {
+//     res.render("shop/orders", {
+//       path: "/orders",
+//       pageTitle: "Your Orders",
+//       orders: orders,
+//     });
+//   });
+// };
