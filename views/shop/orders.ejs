@@ -7,13 +7,14 @@
             <% if (orders.length <= 0) { %>
                 <h1>Nothing there!</h1>
             <% } else { %>
+                <h2> Your name : <%= orders[0].user.name %></h2>
                 <ul>
                     <% orders.forEach(order => { %>
                      <li>
-                        <h1> <%= order.id %></h1>
+                        <h3> Order id : <%= order._id %></h3>
                         <ul>
-                            <% order.products.forEach(product => { %>
-                                <li><%= product.title %> ( <%= product.orderItem.quantity %>)</li>
+                            <% order.items.forEach(product => { %>
+                                <li><%= product.title %> ( <%= product.quantity %>)</li>
                             <% }) %>
                         </ul>
                      </li>
