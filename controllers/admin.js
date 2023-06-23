@@ -19,6 +19,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     imageUrl: imageUrl,
     description: description,
+    userId: req.user._id
   });
   product
     .save()
@@ -76,7 +77,10 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+  // .select('title imageUrl ')   // for selecting specific field like title and imageUrl from document
+    // .populate('userId')
     .then((products) => {
+      // console.log(products)
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
@@ -88,7 +92,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId)
+  Product.findByIdAndRemove(prodId)
     .then((ele) => {
       console.log("Item deleted...");
     })
