@@ -42,6 +42,7 @@ mongoose
   .then((result) => {
     app.listen(3000);
     console.log("Connected...")
+    console.log("App running on " + "http://localhost:3000")
   })
   .catch((err) => {
     console.log(err);
