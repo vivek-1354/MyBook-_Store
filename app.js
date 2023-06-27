@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 const errorController = require("./controllers/error");
 
@@ -21,11 +22,13 @@ const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({secret: 'my secret', resave: false, saveUninitialized: false}))
 
 app.use((req, res, next) => {
   User.findById("6495e8c8a1d4c87b781b3d85")
     .then((user) => {
-      req.user = user
+      req.user = user,
+      // req.isLoggedIn = true
       next();
     })
     .catch((err) => console.log(err));
