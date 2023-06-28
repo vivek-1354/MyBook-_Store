@@ -8,7 +8,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "All Products",
         path: "/products",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
 
       });
     })
@@ -23,7 +23,7 @@ exports.getProduct = (req, res, next) => {
         product: product,
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
 
       });
     })
@@ -37,7 +37,7 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         pageTitle: "Shop",
         path: "/",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
 
       });
     })
@@ -54,24 +54,13 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         pageTitle: "Your Cart",
         prods: products,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
 
       });
     })
     .catch((err) => console.log(err));
 };
-// Cart.getMyCart(cart =>{
-//   Product.findAll(products => {
-//     const cartProducts = [];
-//     for (let product of products){
-//       const cartProductData =cart.products.find(prod => prod.id === product.id)
-//       if (cartProductData){
-//         cartProducts.push({productData: product, qty: cartProductData.qty});
-//       }
-//     }
-//   })
-// })
-// };
+
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
@@ -125,13 +114,13 @@ exports.postOrder = (req, res, next) => {
 
 
 exports.getOrders = (req, res, next) => {
-  Order.find({'user.userId': req.user._id})
+  Order.find({'user.userId': req.session.user._id})
   .then((orders) => {
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "Your Orders",
       orders: orders,
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
 
     });
   });

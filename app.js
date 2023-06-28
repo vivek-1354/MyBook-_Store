@@ -1,5 +1,4 @@
 const path = require("path");
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,8 +6,6 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const errorController = require("./controllers/error");
-
-const mongoConnect = require("./util/database").mongoConnect;
 
 const User = require("./models/user");
 
@@ -41,15 +38,17 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   User.findById("6495e8c8a1d4c87b781b3d85")
-//     .then((user) => {
-//       (req.user = user),
-//         // req.isLoggedIn = true
-//         next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  if (!req.session.user){
+    return next()
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user
+        next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

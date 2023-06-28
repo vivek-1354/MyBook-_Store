@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-const Product = require('../models/product')
-
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema;       // initialize Schema class to Schema
 
 const userSchema = new Schema({
   name: {
@@ -49,34 +47,16 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
-userSchema.methods.removeItemFromCart = function (productId){
-  const updatedCart = this.cart.items.filter(item =>{
+userSchema.methods.removeItemFromCart = function (productId) {
+  const updatedCart = this.cart.items.filter((item) => {
     return item.productId.toString() !== productId.toString();
   });
-  this.cart.items = updatedCart
-  return this.save()
-}
+  this.cart.items = updatedCart;
+  return this.save();
+};
 
-userSchema.methods.clearCart = function (){
-  this.cart = {items: []}
-  this.save()
-}
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  this.save();
+};
 module.exports = mongoose.model("User", userSchema);
-
-//   getOrders() {
-//     const db = getDb();
-//     return db
-//       .collection("orders")
-//       .find({ "user._id": new mongodb.ObjectId(this._id) })
-//       .toArray();
-//   }
-
-//   static findById(userId) {
-//     const db = getDb();
-//     return db
-//       .collection("users")
-//       .findOne({ _id: new mongodb.ObjectId(userId) });
-//   }
-// }
-
-// module.exports = User;
