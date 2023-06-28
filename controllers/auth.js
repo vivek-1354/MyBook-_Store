@@ -16,16 +16,36 @@ exports.postLogin = (req, res, next) => {
         req.session.isLoggedIn = true
         req.session.user = user
         req.session.save(err =>{
-          console.log(err)
+          // console.log(err)
           res.redirect('/')
         })
-    })
-    .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+    };
+    
+exports.postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
+    console.log(err)
+  })
+  res.redirect('/')
 };
 
-exports.postLogout = (req, res, next) => {
-   req.session.destroy((err) => {
-      console.log(err)
-   })
-   res.redirect('/')
-};
+
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup" , {
+    path: "/auth/signup",
+    pageTitle: "SignUp",
+    isAuthenticated: req.session.isLoggedIn
+  })
+}
+
+exports.postSignup = (req, res, next) => { 
+
+  req.session.email = req.body.email
+  req.session.password = req.body.password
+  req.session.confirmPassword = req.body.confirmPassword
+  req.session.save(err => {
+    console.log(err)
+    res.redirect('/login')
+  })
+}
