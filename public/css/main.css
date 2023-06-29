@@ -206,3 +206,24 @@ form {
     display: none;
   }
 }
+
+
+.user-message {
+  margin:auto;
+  width: 40%;
+  border:1px solid rgb(74, 74, 207);
+  padding:0.5rem;
+  border-radius: 3px;
+  background: #b9c9ff;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: rgb(206, 160, 160);
+  color: rgb(234, 9, 9);
+}
+
+.user-message {
+  width:30rem;
+}
