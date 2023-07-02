@@ -3,6 +3,11 @@
     <button id="side-menu-toggle">Menu</button>
     <nav class="main-header__nav">
         <ul class="main-header__item-list">
+            <% if(isAuthenticated) { %>
+            <li class="main-header__item">
+                <a class="<%= path === '/' ? 'active' : '' %>" href="/"><%= user %></a>
+            </li>
+            <% } %>
             <li class="main-header__item">
                 <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
             </li>
