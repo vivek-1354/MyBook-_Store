@@ -25,3 +25,7 @@
 .error {
   color:red;
 }
+
+.form-control  input.invalid {
+  border-color: red;
+}
