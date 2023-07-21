@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { validationResult } = require("express-validator");
+const  {validationResult}  = require("express-validator");
 
 const User = require("../models/user");
 
@@ -81,7 +81,11 @@ exports.postLogin = (req, res, next) => {
           res.redirect("/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    });
 };
 
 exports.postLogout = (req, res, next) => {

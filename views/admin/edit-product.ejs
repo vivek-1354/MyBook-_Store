@@ -7,22 +7,31 @@
    <%- include('../includes/navigation.ejs') %>
 
     <main>
-        <form class="product-form" action="<% if(editing) { %> /admin/edit-product <% } else { %> /admin/add-product <% } %>" method="POST">
+        <% if(errorMessage) { %>
+            <div class="user-message user-message--error">
+                <%= errorMessage %>
+            </div>
+            <% } %>
+        <form class="product-form" action="<% if(editing || hasError) { %> /admin/edit-product <% } else { %> /admin/add-product <% } %>" method="POST" enctype="multipart/form-data">
             <div class="form-control">
                 <label for="title">Title</label>
-                <input type="text" name="title" id="title" value="<% if (editing) { %> <%= product.title %>  <% } %>">
+                <input type="text" name="title" id="title" value="<% if (editing || hasError) { %> <%= product.title %>  <% } %>">
             </div>
-            <div class="form-control">
+            <!-- <div class="form-control">
                 <label for="imageUrl">Image URL</label>
-                <input type="text" name="imageUrl" id="imageUrl" value="<% if (editing) { %> <%= product.imageUrl %>  <% } %>">
+                <input type="text" name="imageUrl" id="imageUrl" value="<% if (editing || hasError) { %> <%= product.imageUrl %>  <% } %>">
+            </div> -->
+            <div class="form-control">
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image">
             </div>
             <div class="form-control">
                 <label for="price">Price</label>
-                <input type="text" name="price" id="price" value="<% if (editing) { %> <%= product.price %>  <% } %>">
+                <input type="text" name="price" id="price" value="<% if (editing || hasError) { %> <%= product.price %>  <% } %>">
             </div>
             <div class="form-control">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" rows="5"><% if (editing) { %> <%=product.description %>  <% } %></textarea>
+                <textarea name="description" id="description" rows="5"><% if (editing || hasError) { %> <%=product.description %>  <% } %></textarea>
             </div>
             <% if (editing) { %>
               <input type="hidden" value="<%= product._id %>" name="productId">

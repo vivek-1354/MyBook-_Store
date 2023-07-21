@@ -7,20 +7,18 @@
             <% if (orders.length <= 0) { %>
                 <h1>Nothing there!</h1>
             <% } else { %>
-                <h2> Your email : <%= orders[0].user.email %></h2>
-                <ul>
-                    <% orders.forEach(order => { %>
-                     <li>
-                        <h3> Order id : <%= order._id %></h3>
-                        <ul>
-                            <% order.products.forEach(product => { %>
-                                <li><%= product.product.title %> (<%= product.quantity %>) ₨:<%= product.product.price*product.quantity %> </li>
-                                <% }) %>
-                                <hr>
-                                                    </ul>
-                     </li>
-                   <% })%>
-                </ul>
+                   <ul class="orders">
+                     <% orders.forEach(order => { %>
+                        <li class="orders__item">
+                           <h1>Order - # <%= order._id %></h1>
+                           <ul class="orders__products">
+                                <% order.products.forEach(p => { %>
+                                    <li class="orders__products-item"><%= p.product.title %> (<%= p.quantity %>) -<a href="/orders/<%= order._id %>">Invoice</a></li>
+                                    <% }); %>
+                           </ul>
+                        </li>
+                        <% }); %>
+                   </ul>
                 <% }%>
         </main>
         <%- include('../includes/end.ejs') %>
