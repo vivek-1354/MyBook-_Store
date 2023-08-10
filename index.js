@@ -116,7 +116,7 @@ mongoose
   .then((result) => {
     app.listen(PORT);
     console.log("Connected...");
-    console.log("App running on " + "http://localhost:3000");
+    console.log(process.env.CYCLIC_URL);
   })
   .catch((err) => {
     console.log(err);
