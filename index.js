@@ -20,7 +20,7 @@ const MONGODB_URI =
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.aofa9mr.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const app = express();
-
+const PORT = process.env.PORT || 3000
 
 const store = new MongoDBStore({
   uri: MONGODB_URI,
@@ -112,9 +112,9 @@ app.use(errorController.get404);
 
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(process.env.MONGODB_URI)
   .then((result) => {
-    app.listen(process.env.PORT || 3000);
+    app.listen(PORT);
     console.log("Connected...");
     console.log("App running on " + "http://localhost:3000");
   })

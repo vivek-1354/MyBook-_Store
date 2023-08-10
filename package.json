@@ -2,12 +2,15 @@
   "name": "nodejs-complete-guide",
   "version": "1.0.0",
   "description": "Complete Node.js Guide",
-  "main": "app.js",
+  "main": "index.js",
+  "engines": {
+    "node": "17.9.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "start-server": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start": "node index.js",
+    "start-server": "node index.js",
+    "start:dev": "nodemon index.js"
   },
   "author": "Vivek Kumar Gupta",
   "license": "ISC",
