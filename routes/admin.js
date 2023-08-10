@@ -21,7 +21,7 @@ router.post(
   [
     validator.body("title").isString().isLength({ min: 3 }).trim(),
     // validator.body("imageUrl").isURL(),
-    validator.body("price").isFloat(),
+    validator.body("price").isInt().trim(),
     validator.body("description").isLength({ min: 8, max: 400 }).trim(),
   ],
   isAuth,
@@ -35,13 +35,13 @@ router.post(
   [
     validator.body("title").isString().isLength({ min: 3 }).trim(),
     // validator.body("imageUrl").isURL(),
-    validator.body("price").isFloat(),
+    validator.body("price").isInt(),
     validator.body("description").isLength({ min: 8, max: 400 }).trim(),
   ],
   isAuth,
   adminController.postEditProduct
 );
 
-router.post("/delete-product", isAuth, adminController.postDeleteProduct);
+router.delete("/product/:productId", isAuth, adminController.deleteProduct);
 
 module.exports = router;

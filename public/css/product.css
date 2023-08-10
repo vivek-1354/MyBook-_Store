@@ -23,6 +23,6 @@
     margin-bottom: 0.5rem;
 }
 
-.product__description {
+.product__description centered {
     text-align: center;
 }

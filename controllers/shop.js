@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const stripe = require("stripe")('sk_test_51NdVSoSD7li1j5yeBhIMB2wfNeD4Z3FZK5Z7Iu27sRE4W6sNAf0hyYcEi320FtBp4qLnro7fuVp5bxvGssnua50c00X1476hQT');
 
 const PDFDocument = require("pdfkit");
 
@@ -138,6 +139,115 @@ exports.postCartDeleteProduct = (req, res, next) => {
   res.redirect("/cart");
 };
 
+
+exports.getCheckout = (req,res, next) => {
+  let products;
+  let total = 0;
+  req.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      products = user.cart.items;
+      total = 0;
+      products.forEach(p => {
+        total += p.quantity * p.productId.price;
+      })
+      
+      // 
+      // const session = stripe.checkout.sessions.create({
+      //   payment_method_types: ['card'],
+      //   line_items: products.map(product => ({
+      //     price: product.priceId, // Stripe Price ID
+      //     quantity: product.quantity,
+      //   })),
+      //   mode: 'payment',
+      //   success_url: 'https://yourwebsite.com/success',
+      //   cancel_url: 'https://yourwebsite.com/cancel',
+      // });
+  
+      // res.json({ sessionId: session.id });
+
+      // const lineItems =  products.map(p => {
+      //   return {
+      //     // name: p.productId.title,
+      //     // description: p.productId.description,
+      //     price: stripe.prices.create({
+      //       product: p.productId,  // product.id,
+      //       unit_amount: 2000,
+      //       currency: 'usd',
+      //     }).id,
+      //     // currency: 'usd',
+      //     quantity: p.quantity
+      //   }
+      // })
+
+      // price_data: {
+      //   currency: 'usd',
+      //   unit_amount: 2000,
+      //   product_data: {
+      //     name: 'T-shirt',
+      //     description: 'Comfortable cotton t-shirt',
+      //     images: ['https://example.com/t-shirt.png'],
+      //   },
+      // },
+      return stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: products.map(p => {
+            return {
+              price_data :{
+                currency: 'inr',
+                unit_amount: p.productId.price * 100,
+                product_data: {
+                  name: p.productId.title,
+                  description: p.productId.description,
+                }
+              },
+              quantity: p.quantity
+            }
+          }),
+          mode: 'payment',
+          success_url: req.protocol + '://' + req.get('host') + '/checkout/success', // http://localhost:3000
+          cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel', // http://localhost:3000
+      })
+    })
+    .then(session => {
+      res.render("shop/checkout", {
+        path: "/checkout",
+        pageTitle: "Checkout",
+        products: products,
+        totalSum: total,
+        sessionId: session.id
+      });
+    })
+}
+exports.getCheckoutSuccess = (req, res, next) => {
+  req.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      const products = user.cart.items.map((i) => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          email: req.user.email,
+          userId: req.user,
+        },
+        products: products,
+      });
+      return order.save();
+    })
+    .then((result) => {
+      return req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect("/orders");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
 exports.postOrder = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
@@ -216,14 +326,14 @@ exports.getInvoice = (req, res, next) => {
               " - " +
               prod.quantity +
               " x " +
-              "$" +
+              "Rs " +
               prod.product.price
           );
       });
       // pdfDoc.text("Hello world!")
 
       pdfDoc.text("---------------------------------------");
-      pdfDoc.text("Total: $ " + totalPrice);
+      pdfDoc.text("Total: Rs " + totalPrice);
       pdfDoc.end();
 
       // fs.readFile(invoicePath, (err, data) => {

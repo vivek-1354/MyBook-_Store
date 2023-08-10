@@ -7,7 +7,7 @@ exports.get404 = (req, res, next) => {
       isAuthenticated: req.session.isLoggedIn,
     });
 };
-
+ 
 exports.get500 = (req, res, next) => {
   res
     .status(500)

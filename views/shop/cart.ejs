@@ -19,7 +19,7 @@
                                     <img src="<%= product.productId.imageUrl %>" alt="<%= product.productId.title %>">
                                 </div>
                                 <div class="card__content">
-                                    <h2 class="product__price">$
+                                    <h2 class="product__price">
                                         <%= product.productId.price %>
                                     </h2>
                                     <p class="product__description">
@@ -36,10 +36,15 @@
                                 </div>
                             </article>
                             <% } %>
-                            <form action="/create-order" method="POST">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <button class="btn">Order Now!</button>
-                            </form>
+                            <hr>
+                            <div class="centered">
+                                <a class="btn" href="/checkout">Pay Now!</a>
+                                <form action="/create-order" method="POST">
+                                   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                   <button class="btn">Order Now!</button>
+                               </form>
+                            </div>
+                           
                     </div>
                     <% } else { %>
                         <h1>Your Cart is Empty!</h1>

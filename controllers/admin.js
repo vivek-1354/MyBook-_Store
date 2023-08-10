@@ -26,7 +26,7 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   const errors = validator.validationResult(req);
-  console.log(image);
+  // console.log(image);
   // console.log(errors.array())
 
   if (!image) {
@@ -199,8 +199,8 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
+exports.deleteProduct = (req, res, next) => {
+  const prodId = req.params.productId;
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
@@ -210,12 +210,13 @@ exports.postDeleteProduct = (req, res, next) => {
       return Product.deleteOne({ _id: prodId, userId: req.user._id });
     })
     .then(() => {
-      console.log("Item deleted...");
-      res.redirect("/admin/products");
+      // res.redirect("/admin/products");
+      res.status(200).json({message :"Item deleted."})
     })
     .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      // const error = new Error(err);
+      // error.httpStatusCode = 500;
+      // return next(error);
+      res.status(500).json({message :"Deleting item falied"})
     });
 };
