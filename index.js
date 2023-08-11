@@ -10,6 +10,7 @@ const flash = require("connect-flash")
 const multer = require('multer')
 const helmet = require('helmet')
 const compression = require('compression')
+const cors = require('cors')
 // const morgan = require('morgan')
 
 const errorController = require("./controllers/error");
@@ -20,6 +21,9 @@ const MONGODB_URI =
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.aofa9mr.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const app = express();
+
+app.use(cors())
+
 const PORT = process.env.PORT || 3000
 
 const store = new MongoDBStore({
