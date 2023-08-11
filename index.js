@@ -62,7 +62,7 @@ const authRoutes = require("./routes/auth");
 //   { flags: 'a'}
 // );
 
-app.use(helmet())   // adding some important headers to every request, response
+// app.use(helmet())   // adding some important headers to every request, response
 app.use(compression())  // compress size of data and files but not image file
 // app.use(morgan('combined', {stream: accessLogStream}))
 
@@ -114,13 +114,14 @@ app.get('/500', errorController.get500)
 
 app.use(errorController.get404);
 
+console.log(MONGODB_URI)
+console.log(process.env.STRIPE_KEY)
 
 mongoose
   .connect(MONGODB_URI)
   .then((result) => {
     app.listen(PORT);
     console.log("Connected...");
-    console.log(process.env.CYCLIC_URL);
   })
   .catch((err) => {
     console.log(err);
